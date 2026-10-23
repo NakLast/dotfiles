@@ -23,6 +23,11 @@ Built with a consistent aesthetic using the **Catppuccin Mocha** palette, **JetB
 │   ├── .neoconf.json        # Neoconf local configuration
 │   ├── lua/                 # Config modules and plugin specifications
 │   └── README.md            # Detailed Neovim documentation
+├── zsh/                     # Zsh shell configuration
+│   ├── .zshrc               # Main Zsh configuration (Oh My Zsh, aliases, tool paths)
+│   ├── .p10k.zsh            # Powerlevel10k prompt customization
+│   ├── .zshenv              # Environment variables (Cargo, Go)
+│   └── README.md            # Detailed Zsh documentation
 └── README.md                # Repository index & setup guide (this file)
 ```
 
@@ -34,6 +39,7 @@ Built with a consistent aesthetic using the **Catppuccin Mocha** palette, **JetB
 | :--- | :--- | :--- |
 | **🐱 Kitty** | Fast, GPU-accelerated terminal with custom top powerline tabs, cursor trail effects, window blur, and opacity. | [kitty/README.md](kitty/README.md) |
 | **💤 Neovim** | Modern LazyVim-based development environment with LSP, Snacks.nvim explorer, Antigravity AI assistant, and rich language support. | [nvim/README.md](nvim/README.md) |
+| **🐚 Zsh** | Fast, interactive shell with Oh My Zsh, Powerlevel10k theme, autosuggestions, syntax highlighting, and CLI tool integrations. | [zsh/README.md](zsh/README.md) |
 
 ---
 
@@ -55,14 +61,15 @@ To run these configurations, ensure the following core tools are installed:
 
 - **Terminal**: [Kitty Terminal](https://sw.kovidgoyal.net/kitty/)
 - **Editor**: [Neovim](https://neovim.io/) >= `0.10.0`
+- **Shell**: [Zsh](https://www.zsh.org/) & [Oh My Zsh](https://ohmyz.sh/)
 - **Font**: [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) (v3.0+)
-- **System Tools**: `git`, `ripgrep`, `fd-find`, `build-essential` / `gcc`
+- **System Tools**: `git`, `ripgrep`, `fd-find`, `build-essential` / `gcc`, `bat`, `fzf`, `stow`
 - **Runtimes**: Node.js (>= 18), Python 3 & `python3-venv`
 
 ### Quick Install (Ubuntu / Debian)
 ```bash
 sudo apt update
-sudo apt install -y kitty neovim git ripgrep fd-find build-essential python3 python3-venv nodejs npm stow
+sudo apt install -y zsh kitty neovim git ripgrep fd-find build-essential python3 python3-venv nodejs npm stow bat fzf
 ```
 
 ---
@@ -81,6 +88,9 @@ cd ~/dotfiles
 Stow creates and manages symlinks automatically:
 
 ```bash
+# Link Zsh configuration
+stow zsh -t ~
+
 # Link Kitty configuration
 mkdir -p ~/.config/kitty
 stow kitty -t ~/.config/kitty
@@ -91,26 +101,33 @@ stow nvim -t ~/.config/nvim
 ```
 
 #### Method B: Direct Symbolic Links
-Alternatively, create manual symlinks to `~/.config`:
+Alternatively, create manual symlinks:
 
 ```bash
 # Backup existing configs if present
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak.$(date +%F)
+[ -f ~/.p10k.zsh ] && mv ~/.p10k.zsh ~/.p10k.zsh.bak.$(date +%F)
+[ -f ~/.zshenv ] && mv ~/.zshenv ~/.zshenv.bak.$(date +%F)
 [ -d ~/.config/kitty ] && mv ~/.config/kitty ~/.config/kitty.bak.$(date +%F)
 [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak.$(date +%F)
 
 # Create symlinks
+ln -s ~/dotfiles/zsh/.zshrc ~/.zshrc
+ln -s ~/dotfiles/zsh/.p10k.zsh ~/.p10k.zsh
+ln -s ~/dotfiles/zsh/.zshenv ~/.zshenv
 ln -s ~/dotfiles/kitty ~/.config/kitty
 ln -s ~/dotfiles/nvim ~/.config/nvim
 ```
 
 ### 3. Launch & Verify
+- **Zsh**: Reload your shell session with `source ~/.zshrc`.
 - **Kitty**: Launch Kitty or reload an existing session with `Ctrl + Shift + F5`.
 - **Neovim**: Open `nvim`. Plugins and Tree-sitter parsers will bootstrap automatically on first launch. Run `:checkhealth` to verify tool installations.
 
 ---
 
 ## 📌 Roadmap
-- [ ] Shell configuration (`zsh` / `fish` with Starship prompt)
+- [x] Shell configuration (Zsh with Oh My Zsh & Powerlevel10k)
 - [ ] Wayland Compositor / Window Manager (`Hyprland` / `Waybar`)
 - [ ] Terminal multiplexer (`tmux` / `zellij`)
 - [ ] Git & Lazygit configuration
